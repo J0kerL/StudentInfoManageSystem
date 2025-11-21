@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  # 默认开启彩色日志
+  output:
+    ansi:
+      enabled: always
+spring:
+  application:
+    name: StudentInfoManageSystem
+  profiles:
+    active: dev
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sims.model
+  configuration:
+    map-underscore-to-camel-case: true
+# JWT配置
+jwt:
+  # Token在请求头中的key名称
+  header: Authorization
+  # 密钥
+  secret: DiamondSecretKey2025StudentInfoManageSystemSecureToken
+  # token过期时间 2小时(毫秒)
+  expiration: 7200000

@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/student_info_system?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: 192.168.227.133
+      port: 6379
+      password: 123456
+      database: 0
+
+mybatis:
+  configuration:
+    # 生产通常不打印 SQL
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+# 日志配置
+logging:
+  level:
+    # 根日志级别设置为警告级别
+    root: warn
+    # com.sims包下的日志级别设置为信息级别
+    com.sims: info
+  file:
+    # 指定日志文件的路径和名称
+    name: /www/wwwroot/Diamond/SIMS/backend/logs/app.log

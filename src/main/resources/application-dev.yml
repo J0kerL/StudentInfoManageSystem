@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/student_info_system?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 1234
+  data:
+    redis:
+      host: 192.168.227.133
+      port: 6379
+      password: 1234
+      database: 0
+mybatis:
+  configuration:
+    # 开启SQL日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 开发环境日志配置
+logging:
+  level:
+    com.sims.mapper: debug
+    com.sims.controller: info
+    com.sims.service: info
+    com.sims.interceptor: debug
+    # 添加MyBatis的SQL日志级别
+    org.apache.ibatis: debug
+    java.sql: debug
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(%-40.40logger{39}){cyan} : %msg%n"
