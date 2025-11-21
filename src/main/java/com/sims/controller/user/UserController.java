@@ -3,6 +3,7 @@ package com.sims.controller.user;
 import com.sims.model.dto.user.LoginRequest;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.RegisterRequest;
+import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 import com.sims.result.Result;
 import com.sims.service.UserService;
@@ -73,6 +74,16 @@ public class UserController {
         }
         userService.logout(token);
         return Result.success("退出登录成功", null);
+    }
+
+    /**
+     * 查看个人信息
+     *
+     * @return
+     */
+    @GetMapping("/profile")
+    public Result<UserVO> profile() {
+        return Result.success(userService.profile());
     }
 
 }

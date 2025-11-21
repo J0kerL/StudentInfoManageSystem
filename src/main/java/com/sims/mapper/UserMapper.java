@@ -21,4 +21,7 @@ public interface UserMapper {
             "VALUES (#{username}, #{password}, #{realName}, #{phone}, #{email}, #{userType}, #{status}, #{createTime}, #{updateTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(User user);
+
+    @Select("select *from sys_user where id = #{userId}")
+    User findById(Long userId);
 }

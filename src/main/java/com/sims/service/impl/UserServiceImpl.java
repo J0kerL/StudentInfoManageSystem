@@ -1,22 +1,26 @@
 package com.sims.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sims.constant.Status;
 import com.sims.constant.UserType;
+import com.sims.context.UserContext;
 import com.sims.exception.BusinessException;
 import com.sims.mapper.UserMapper;
 import com.sims.model.dto.user.LoginRequest;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.RegisterRequest;
 import com.sims.model.entity.User;
+import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 import com.sims.service.TokenBlacklistService;
 import com.sims.service.UserService;
 import com.sims.utils.JwtUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +30,7 @@ import java.util.List;
  * @author Diamond
  * @create 2025-11-12 16:21
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -58,7 +63,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new BusinessException(401, "用户不存在");
         }
-        if (!BCrypt.checkpw(password, user.getPassword())){
+        if (!BCrypt.checkpw(password, user.getPassword())) {
             throw new BusinessException(401, "密码错误");
         }
         if (user.getStatus() == Status.INACTIVE) {
@@ -112,7 +117,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(username);
         // 加密密码
-        user.setPassword(BCrypt.hashpw( password));
+        user.setPassword(BCrypt.hashpw(password));
         user.setRealName(realName);
         user.setPhone(phone);
         user.setEmail(email);
@@ -129,6 +134,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 退出登录
+     *
      * @param token JWT token
      */
     @Override
@@ -150,5 +156,23 @@ public class UserServiceImpl implements UserService {
 
         // 将token加入黑名单，过期时间与token的剩余有效期一致
         tokenBlacklistService.addToBlacklist(token, remainingTime);
+    }
+
+    /**
+     * 查看个人信息
+     *
+     * @return
+     */
+    @Override
+    public UserVO profile() {
+        Long userId = UserContext.getUserId();
+        log.info("查看用户信息，用户ID：{}", userId);
+        User user = userMapper.findById(userId);
+        if (user == null) {
+            throw new BusinessException(401, "用户不存在");
+        }
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(user, userVO);
+        return userVO;
     }
 }
