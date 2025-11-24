@@ -24,7 +24,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -126,8 +125,7 @@ public class UserServiceImpl implements UserService {
         user.setUserType(UserType.STUDENT);
         // 默认激活状态
         user.setStatus(Status.ACTIVE);
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
+        // createTime和updateTime由MyBatis拦截器自动填充
 
         // 插入数据库
         userMapper.insert(user);
@@ -204,8 +202,8 @@ public class UserServiceImpl implements UserService {
 
         // 复制属性并更新
         BeanUtil.copyProperties(updateProfileDTO, user);
-        user.setUpdateTime(LocalDateTime.now());
-        userMapper.update(user,currentUserId);
+        // updateTime由MyBatis拦截器自动填充
+        userMapper.update(user, currentUserId);
 
         log.info("用户：{}个人信息更新成功", currentUserId);
     }
