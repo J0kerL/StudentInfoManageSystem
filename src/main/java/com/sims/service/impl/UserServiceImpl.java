@@ -9,10 +9,7 @@ import com.sims.constant.UserType;
 import com.sims.context.UserContext;
 import com.sims.exception.BusinessException;
 import com.sims.mapper.UserMapper;
-import com.sims.model.dto.user.LoginRequest;
-import com.sims.model.dto.user.PageQueryDTO;
-import com.sims.model.dto.user.RegisterRequest;
-import com.sims.model.dto.user.UpdateProfileDTO;
+import com.sims.model.dto.user.*;
 import com.sims.model.entity.User;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
@@ -96,7 +93,7 @@ public class UserServiceImpl implements UserService {
      * @param registerRequest
      */
     @Override
-    public void register(RegisterRequest registerRequest) {
+    public UserVO register(RegisterRequest registerRequest) {
         String username = registerRequest.getUsername();
         String password = registerRequest.getPassword();
         String realName = registerRequest.getRealName();
@@ -114,21 +111,27 @@ public class UserServiceImpl implements UserService {
         }
 
         // 创建新用户
-        User user = new User();
-        user.setUsername(username);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
         // 加密密码
-        user.setPassword(BCrypt.hashpw(password));
-        user.setRealName(realName);
-        user.setPhone(phone);
-        user.setEmail(email);
+        userDTO.setPassword(BCrypt.hashpw(password));
+        userDTO.setRealName(realName);
+        userDTO.setPhone(phone);
+        userDTO.setEmail(email);
         // 默认注册为学生
-        user.setUserType(UserType.STUDENT);
+        userDTO.setUserType(UserType.STUDENT);
         // 默认激活状态
-        user.setStatus(Status.ACTIVE);
+        userDTO.setStatus(Status.ACTIVE);
         // createTime和updateTime由MyBatis拦截器自动填充
 
         // 插入数据库
-        userMapper.insert(user);
+        userMapper.insert(userDTO);
+        
+        // 将UserDTO直接转换为UserVO
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(userDTO, userVO);
+        userVO.setPassword("******");
+        return userVO;
     }
 
     /**
@@ -206,5 +209,29 @@ public class UserServiceImpl implements UserService {
         userMapper.update(user, currentUserId);
 
         log.info("用户：{}个人信息更新成功", currentUserId);
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param userDTO
+     * @return
+     */
+    @Override
+    public UserVO addUser(UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        if (StringUtils.isBlank(username)){
+            throw new BusinessException(400, "用户名不能为空");
+        }
+        if (userMapper.findByUsername(username) != null){
+            throw new BusinessException(400, "用户名已存在");
+        }
+        userMapper.insert(userDTO);
+        
+        // 将UserDTO直接转换为UserVO
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(userDTO, userVO);
+        userVO.setPassword("******");
+        return userVO;
     }
 }

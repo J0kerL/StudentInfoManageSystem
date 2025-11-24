@@ -1,9 +1,6 @@
 package com.sims.controller.user;
 
-import com.sims.model.dto.user.LoginRequest;
-import com.sims.model.dto.user.PageQueryDTO;
-import com.sims.model.dto.user.RegisterRequest;
-import com.sims.model.dto.user.UpdateProfileDTO;
+import com.sims.model.dto.user.*;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 import com.sims.result.Result;
@@ -31,9 +28,8 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result<String> register(@RequestBody RegisterRequest registerRequest) {
-        userService.register(registerRequest);
-        return Result.success("注册成功");
+    public Result<UserVO> register(@RequestBody RegisterRequest registerRequest) {
+        return Result.success(userService.register(registerRequest));
     }
 
     /**
@@ -97,5 +93,16 @@ public class UserController {
     public Result<String> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO) {
         userService.updateProfile(updateProfileDTO);
         return Result.success(null);
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param userDTO
+     * @return
+     */
+    @PostMapping("/addUser")
+    public Result<UserVO> addUser(@RequestBody UserDTO userDTO){
+        return Result.success(userService.addUser(userDTO));
     }
 }

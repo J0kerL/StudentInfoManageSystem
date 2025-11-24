@@ -1,9 +1,6 @@
 package com.sims.service;
 
-import com.sims.model.dto.user.LoginRequest;
-import com.sims.model.dto.user.PageQueryDTO;
-import com.sims.model.dto.user.RegisterRequest;
-import com.sims.model.dto.user.UpdateProfileDTO;
+import com.sims.model.dto.user.*;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 
@@ -16,11 +13,13 @@ public interface UserService {
 
     PageResult page(PageQueryDTO pageQueryDTO);
 
-    void register(RegisterRequest registerRequest);
+    UserVO register(RegisterRequest registerRequest);
 
     void logout(String token);
 
     UserVO profile();
 
     void updateProfile(UpdateProfileDTO updateProfileDTO);
+
+    UserVO addUser(UserDTO userDTO);
 }
