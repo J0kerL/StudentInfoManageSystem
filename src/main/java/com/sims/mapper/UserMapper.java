@@ -5,6 +5,7 @@ import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -24,4 +25,6 @@ public interface UserMapper {
 
     @Select("select *from sys_user where id = #{userId}")
     User findById(Long userId);
+
+    void update(@Param("user") User user, @Param("currentUserId") Long currentUserId);
 }

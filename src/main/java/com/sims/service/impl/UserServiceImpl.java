@@ -12,6 +12,7 @@ import com.sims.mapper.UserMapper;
 import com.sims.model.dto.user.LoginRequest;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.RegisterRequest;
+import com.sims.model.dto.user.UpdateProfileDTO;
 import com.sims.model.entity.User;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
@@ -174,5 +175,38 @@ public class UserServiceImpl implements UserService {
         UserVO userVO = new UserVO();
         BeanUtil.copyProperties(user, userVO);
         return userVO;
+    }
+
+    /**
+     * 更新个人信息
+     *
+     * @param updateProfileDTO
+     */
+    @Override
+    public void updateProfile(UpdateProfileDTO updateProfileDTO) {
+        Long currentUserId = UserContext.getUserId();
+        log.info("用户：{}正在修改个人信息...", currentUserId);
+
+        // 查询当前用户
+        User user = userMapper.findById(currentUserId);
+        if (user == null) {
+            throw new BusinessException(401, "用户不存在");
+        }
+
+        // 如果用户名被修改，检查新用户名是否已被其他用户占用
+        if (updateProfileDTO.getUsername() != null &&
+                !updateProfileDTO.getUsername().equals(user.getUsername())) {
+            User existUser = userMapper.findByUsername(updateProfileDTO.getUsername());
+            if (existUser != null && !existUser.getId().equals(currentUserId)) {
+                throw new BusinessException(400, "用户名已被占用");
+            }
+        }
+
+        // 复制属性并更新
+        BeanUtil.copyProperties(updateProfileDTO, user);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.update(user,currentUserId);
+
+        log.info("用户：{}个人信息更新成功", currentUserId);
     }
 }

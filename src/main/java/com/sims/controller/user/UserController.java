@@ -3,6 +3,7 @@ package com.sims.controller.user;
 import com.sims.model.dto.user.LoginRequest;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.RegisterRequest;
+import com.sims.model.dto.user.UpdateProfileDTO;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 import com.sims.result.Result;
@@ -86,4 +87,15 @@ public class UserController {
         return Result.success(userService.profile());
     }
 
+    /**
+     * 更新个人信息
+     *
+     * @param updateProfileDTO
+     * @return
+     */
+    @PutMapping("/updateProfile")
+    public Result<String> updateProfile(@RequestBody UpdateProfileDTO updateProfileDTO) {
+        userService.updateProfile(updateProfileDTO);
+        return Result.success(null);
+    }
 }

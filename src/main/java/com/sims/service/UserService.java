@@ -3,6 +3,7 @@ package com.sims.service;
 import com.sims.model.dto.user.LoginRequest;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.RegisterRequest;
+import com.sims.model.dto.user.UpdateProfileDTO;
 import com.sims.model.vo.UserVO;
 import com.sims.result.PageResult;
 
@@ -20,4 +21,6 @@ public interface UserService {
     void logout(String token);
 
     UserVO profile();
+
+    void updateProfile(UpdateProfileDTO updateProfileDTO);
 }
