@@ -118,8 +118,8 @@ public class UserServiceImpl implements UserService {
         userDTO.setRealName(realName);
         userDTO.setPhone(phone);
         userDTO.setEmail(email);
-        // 默认注册为学生
-        userDTO.setUserType(UserType.STUDENT);
+        // 默认注册为教师
+        userDTO.setUserType(UserType.TEACHER);
         // 默认激活状态
         userDTO.setStatus(Status.ACTIVE);
         // createTime和updateTime由MyBatis拦截器自动填充
@@ -226,6 +226,10 @@ public class UserServiceImpl implements UserService {
         if (userMapper.findByUsername(username) != null){
             throw new BusinessException(400, "用户名已存在");
         }
+        // 加密密码
+        if (StringUtils.isNotBlank(userDTO.getPassword())) {
+            userDTO.setPassword(BCrypt.hashpw(userDTO.getPassword()));
+        }
         userMapper.insert(userDTO);
         
         // 将UserDTO直接转换为UserVO
@@ -233,5 +237,23 @@ public class UserServiceImpl implements UserService {
         BeanUtil.copyProperties(userDTO, userVO);
         userVO.setPassword("******");
         return userVO;
+    }
+
+    /**
+     * 批量删除用户
+     *
+     * @param ids 用户ID列表
+     */
+    @Override
+    public void deleteUser(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(400, "用户ID列表不能为空");
+        }
+        Long currentUserId = UserContext.getUserId();
+        if (ids.contains(currentUserId)) {
+            throw new BusinessException(401, "不能删除自己");
+        }
+        log.info("批量删除用户，用户ID列表：{}", ids);
+        userMapper.deleteByIds(ids);
     }
 }

@@ -6,6 +6,5 @@ package com.sims.constant;
  */
 public enum UserType {
     ADMIN,
-    TEACHER,
-    STUDENT
+    TEACHER
 }

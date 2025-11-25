@@ -4,10 +4,9 @@ import com.github.pagehelper.Page;
 import com.sims.model.dto.user.PageQueryDTO;
 import com.sims.model.dto.user.UserDTO;
 import com.sims.model.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  * @author Diamond
@@ -28,4 +27,6 @@ public interface UserMapper {
     User findById(Long userId);
 
     void update(@Param("user") User user, @Param("currentUserId") Long currentUserId);
+
+    void deleteByIds(@Param("ids") List<Long> ids);
 }

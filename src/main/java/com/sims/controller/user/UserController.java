@@ -10,6 +10,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Diamond
  * @create 2025-11-12 16:13
@@ -102,7 +104,19 @@ public class UserController {
      * @return
      */
     @PostMapping("/addUser")
-    public Result<UserVO> addUser(@RequestBody UserDTO userDTO){
+    public Result<UserVO> addUser(@RequestBody UserDTO userDTO) {
         return Result.success(userService.addUser(userDTO));
+    }
+
+    /**
+     * 批量删除系统用户
+     *
+     * @param ids 用户ID列表
+     * @return
+     */
+    @DeleteMapping("/deleteUser")
+    public Result<String> deleteUser(@RequestBody List<Long> ids) {
+        userService.deleteUser(ids);
+        return Result.success(null);
     }
 }
