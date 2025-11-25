@@ -7,4 +7,6 @@ package com.sims.constant;
 public enum Status {
     ACTIVE,
     INACTIVE,
+    GRADUATED,
+    TRANSFERRED,
 }

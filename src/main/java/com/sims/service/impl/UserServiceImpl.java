@@ -219,16 +219,26 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserVO addUser(UserDTO userDTO) {
+        // 必填字段校验
         String username = userDTO.getUsername();
         if (StringUtils.isBlank(username)) {
             throw new BusinessException(400, "用户名不能为空");
         }
+        if (StringUtils.isBlank(userDTO.getPassword())) {
+            throw new BusinessException(400, "密码不能为空");
+        }
+        if (userDTO.getUserType() == null) {
+            throw new BusinessException(400, "用户类型不能为空");
+        }
+        // 唯一性校验
         if (userMapper.findByUsername(username) != null) {
             throw new BusinessException(400, "用户名已存在");
         }
         // 加密密码
-        if (StringUtils.isNotBlank(userDTO.getPassword())) {
-            userDTO.setPassword(BCrypt.hashpw(userDTO.getPassword()));
+        userDTO.setPassword(BCrypt.hashpw(userDTO.getPassword()));
+        // 默认激活状态
+        if (userDTO.getStatus() == null) {
+            userDTO.setStatus(Status.ACTIVE);
         }
         userMapper.insert(userDTO);
 
@@ -257,6 +267,11 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteByIds(ids);
     }
 
+    /**
+     * 修改用户信息
+     *
+     * @param updateUserDTO
+     */
     @Override
     public void updateUser(UpdateUserDTO updateUserDTO) {
         Long id = updateUserDTO.getId();
