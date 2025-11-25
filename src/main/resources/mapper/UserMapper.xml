@@ -19,7 +19,7 @@
     </resultMap>
 
     <!-- 更新个人信息 -->
-    <update id="update">
+    <update id="updateProfile">
         UPDATE sys_user
         <set>
             <if test="user.username != null and user.username != ''">
@@ -39,6 +39,36 @@
             </if>
         </set>
         WHERE id = #{currentUserId}
+    </update>
+
+    <!-- 更新系统用户信息 -->
+    <update id="update">
+        UPDATE sys_user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
     </update>
 
     <!-- 分页查询 -->

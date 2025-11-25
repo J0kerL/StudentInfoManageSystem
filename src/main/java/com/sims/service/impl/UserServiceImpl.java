@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
         // 插入数据库
         userMapper.insert(userDTO);
-        
+
         // 将UserDTO直接转换为UserVO
         UserVO userVO = new UserVO();
         BeanUtil.copyProperties(userDTO, userVO);
@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
         // 复制属性并更新
         BeanUtil.copyProperties(updateProfileDTO, user);
         // updateTime由MyBatis拦截器自动填充
-        userMapper.update(user, currentUserId);
+        userMapper.updateProfile(user, currentUserId);
 
         log.info("用户：{}个人信息更新成功", currentUserId);
     }
@@ -220,10 +220,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO addUser(UserDTO userDTO) {
         String username = userDTO.getUsername();
-        if (StringUtils.isBlank(username)){
+        if (StringUtils.isBlank(username)) {
             throw new BusinessException(400, "用户名不能为空");
         }
-        if (userMapper.findByUsername(username) != null){
+        if (userMapper.findByUsername(username) != null) {
             throw new BusinessException(400, "用户名已存在");
         }
         // 加密密码
@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setPassword(BCrypt.hashpw(userDTO.getPassword()));
         }
         userMapper.insert(userDTO);
-        
+
         // 将UserDTO直接转换为UserVO
         UserVO userVO = new UserVO();
         BeanUtil.copyProperties(userDTO, userVO);
@@ -255,5 +255,32 @@ public class UserServiceImpl implements UserService {
         }
         log.info("批量删除用户，用户ID列表：{}", ids);
         userMapper.deleteByIds(ids);
+    }
+
+    @Override
+    public void updateUser(UpdateUserDTO updateUserDTO) {
+        Long id = updateUserDTO.getId();
+        String username = updateUserDTO.getUsername();
+        log.info("更新用户信息，用户ID：{}", id);
+        if (id == null) {
+            throw new BusinessException(400, "用户ID不能为空");
+        }
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new BusinessException(400, "用户不存在");
+        }
+        // 如果用户名被修改，检查新用户名是否已被其他用户占用
+        if (username != null && !username.equals(user.getUsername())) {
+            User existUser = userMapper.findByUsername(username);
+            if (existUser != null && !existUser.getId().equals(id)) {
+                throw new BusinessException(400, "用户名已被占用");
+            }
+        }
+        // 加密密码
+        if (StringUtils.isNotBlank(updateUserDTO.getPassword())) {
+            updateUserDTO.setPassword(BCrypt.hashpw(updateUserDTO.getPassword()));
+        }
+        // updateTime由MyBatis拦截器自动填充
+        userMapper.update(updateUserDTO);
     }
 }

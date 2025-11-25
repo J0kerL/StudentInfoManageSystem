@@ -2,6 +2,7 @@ package com.sims.mapper;
 
 import com.github.pagehelper.Page;
 import com.sims.model.dto.user.PageQueryDTO;
+import com.sims.model.dto.user.UpdateUserDTO;
 import com.sims.model.dto.user.UserDTO;
 import com.sims.model.entity.User;
 import org.apache.ibatis.annotations.*;
@@ -26,7 +27,9 @@ public interface UserMapper {
     @Select("select *from sys_user where id = #{userId}")
     User findById(Long userId);
 
-    void update(@Param("user") User user, @Param("currentUserId") Long currentUserId);
+    void updateProfile(@Param("user") User user, @Param("currentUserId") Long currentUserId);
 
     void deleteByIds(@Param("ids") List<Long> ids);
+
+    void update(UpdateUserDTO updateUserDTO);
 }

@@ -119,4 +119,16 @@ public class UserController {
         userService.deleteUser(ids);
         return Result.success(null);
     }
+
+    /**
+     * 修改用户信息
+     *
+     * @param updateUserDTO
+     * @return
+     */
+    @PutMapping("/updateUser")
+    public Result<String> updateUser(@RequestBody UpdateUserDTO updateUserDTO) {
+        userService.updateUser(updateUserDTO);
+        return Result.success(null);
+    }
 }
