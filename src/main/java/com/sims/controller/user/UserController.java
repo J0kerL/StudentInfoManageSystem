@@ -49,12 +49,12 @@ public class UserController {
     /**
      * 分页查询
      *
-     * @param pageQueryDTO
+     * @param pageQueryUserDTO
      * @return
      */
     @GetMapping("/page")
-    public Result<PageResult> page(PageQueryDTO pageQueryDTO) {
-        PageResult pageResult = userService.page(pageQueryDTO);
+    public Result<PageResult> page(PageQueryUserDTO pageQueryUserDTO) {
+        PageResult pageResult = userService.page(pageQueryUserDTO);
         return Result.success(pageResult);
     }
 

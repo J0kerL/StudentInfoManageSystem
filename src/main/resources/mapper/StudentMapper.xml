@@ -52,4 +52,30 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 分页查询学生信息 -->
+    <select id="page" resultType="com.sims.model.entity.Student">
+        SELECT * FROM student
+        <where>
+            <if test="studentNumber != null and studentNumber != ''">
+                AND student_number LIKE CONCAT('%', #{studentNumber}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+            <if test="majorId != null">
+                AND major_id = #{majorId}
+            </if>
+            <if test="classId != null">
+                AND class_id = #{classId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        order by id asc
+    </select>
 </mapper>

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @create 2025-11-18 16:14
  */
 @Data
-public class PageQueryDTO implements Serializable {
+public class PageQueryUserDTO implements Serializable {
 
     private String username;
     private String realName;

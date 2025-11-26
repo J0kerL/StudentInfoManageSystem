@@ -1,7 +1,7 @@
 package com.sims.mapper;
 
 import com.github.pagehelper.Page;
-import com.sims.model.dto.user.PageQueryDTO;
+import com.sims.model.dto.user.PageQueryUserDTO;
 import com.sims.model.dto.user.UpdateUserDTO;
 import com.sims.model.dto.user.UserDTO;
 import com.sims.model.entity.User;
@@ -17,7 +17,7 @@ public interface UserMapper {
     @Select("select *from sys_user where username = #{username}")
     User findByUsername(String username);
 
-    Page<User> page(PageQueryDTO pageQueryDTO);
+    Page<User> page(PageQueryUserDTO pageQueryUserDTO);
 
     @Insert("INSERT INTO sys_user (username, password, real_name, phone, email, user_type, status, create_time, update_time) " +
             "VALUES (#{username}, #{password}, #{realName}, #{phone}, #{email}, #{userType}, #{status}, #{createTime}, #{updateTime})")

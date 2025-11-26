@@ -1,15 +1,19 @@
 package com.sims.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sims.constant.Status;
 import com.sims.exception.BusinessException;
 import com.sims.mapper.ClassMapper;
 import com.sims.mapper.MajorMapper;
 import com.sims.mapper.ScoreMapper;
 import com.sims.mapper.StudentMapper;
+import com.sims.model.dto.student.PageQueryStudentDTO;
 import com.sims.model.dto.student.StudentDTO;
 import com.sims.model.entity.Student;
 import com.sims.model.vo.StudentVO;
+import com.sims.result.PageResult;
 import com.sims.service.StudentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -153,5 +157,18 @@ public class StudentServiceImpl implements StudentService {
 
         studentMapper.update(studentDTO);
         log.info("学生信息修改成功，ID：{}", studentDTO.getId());
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param pageQueryStudentDTO
+     * @return
+     */
+    @Override
+    public PageResult page(PageQueryStudentDTO pageQueryStudentDTO) {
+        PageHelper.startPage(pageQueryStudentDTO.getPage(), pageQueryStudentDTO.getPageSize());
+        Page<Student> pageResult = studentMapper.page(pageQueryStudentDTO);
+        return new PageResult(pageResult.getTotal(), pageResult.getResult());
     }
 }

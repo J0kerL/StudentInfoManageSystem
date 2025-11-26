@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserService {
     String login(LoginRequest loginRequest);
 
-    PageResult page(PageQueryDTO pageQueryDTO);
+    PageResult page(PageQueryUserDTO pageQueryUserDTO);
 
     UserVO register(RegisterRequest registerRequest);
 

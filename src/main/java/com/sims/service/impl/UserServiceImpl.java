@@ -74,13 +74,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 分页查询
      *
-     * @param pageQueryDTO
+     * @param pageQueryUserDTO
      * @return
      */
     @Override
-    public PageResult page(PageQueryDTO pageQueryDTO) {
-        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
-        Page<User> page = userMapper.page(pageQueryDTO);
+    public PageResult page(PageQueryUserDTO pageQueryUserDTO) {
+        PageHelper.startPage(pageQueryUserDTO.getPage(), pageQueryUserDTO.getPageSize());
+        Page<User> page = userMapper.page(pageQueryUserDTO);
         long total = page.getTotal();
         List<User> result = page.getResult();
         result.forEach(user -> user.setPassword("******"));

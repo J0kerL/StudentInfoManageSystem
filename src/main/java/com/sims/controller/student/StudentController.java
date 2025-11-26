@@ -1,7 +1,9 @@
 package com.sims.controller.student;
 
+import com.sims.model.dto.student.PageQueryStudentDTO;
 import com.sims.model.dto.student.StudentDTO;
 import com.sims.model.vo.StudentVO;
+import com.sims.result.PageResult;
 import com.sims.result.Result;
 import com.sims.service.StudentService;
 import jakarta.annotation.Resource;
@@ -53,5 +55,17 @@ public class StudentController {
     public Result<String> updateStudent(@RequestBody StudentDTO studentDTO) {
         studentService.updateStudent(studentDTO);
         return Result.success(null);
+    }
+
+    /**
+     * 分页查询学生
+     *
+     * @param pageQueryStudentDTO
+     * @return
+     */
+    @GetMapping("/page")
+    public Result<PageResult> page(PageQueryStudentDTO pageQueryStudentDTO) {
+        PageResult pageResult = studentService.page(pageQueryStudentDTO);
+        return Result.success(pageResult);
     }
 }

@@ -1,5 +1,7 @@
 package com.sims.mapper;
 
+import com.github.pagehelper.Page;
+import com.sims.model.dto.student.PageQueryStudentDTO;
 import com.sims.model.dto.student.StudentDTO;
 import com.sims.model.entity.Student;
 import org.apache.ibatis.annotations.*;
@@ -26,4 +28,6 @@ public interface StudentMapper {
     void deleteByIds(@Param("ids") List<Long> ids);
 
     void update(StudentDTO studentDTO);
+
+    Page<Student> page(PageQueryStudentDTO pageQueryStudentDTO);
 }
