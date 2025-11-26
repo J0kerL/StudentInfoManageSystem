@@ -16,7 +16,6 @@ public class StudentVO {
     private String studentNumber;
     private String name;
     private String gender;
-    private LocalDate birthDate;
     private String phone;
     private String email;
     private String address;

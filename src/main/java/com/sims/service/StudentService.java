@@ -14,4 +14,6 @@ public interface StudentService {
     StudentVO addStudent(StudentDTO studentDTO);
 
     void deleteStudents(List<Long> ids);
+
+    void updateStudent(StudentDTO studentDTO);
 }

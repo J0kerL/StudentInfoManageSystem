@@ -3,9 +3,12 @@ package com.sims.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.sims.constant.Status;
 import com.sims.exception.BusinessException;
+import com.sims.mapper.ClassMapper;
+import com.sims.mapper.MajorMapper;
 import com.sims.mapper.ScoreMapper;
 import com.sims.mapper.StudentMapper;
 import com.sims.model.dto.student.StudentDTO;
+import com.sims.model.entity.Student;
 import com.sims.model.vo.StudentVO;
 import com.sims.service.StudentService;
 import jakarta.annotation.Resource;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,6 +31,10 @@ public class StudentServiceImpl implements StudentService {
     private StudentMapper studentMapper;
     @Resource
     private ScoreMapper scoreMapper;
+    @Resource
+    private ClassMapper classMapper;
+    @Resource
+    private MajorMapper majorMapper;
 
     /**
      * 添加学生
@@ -85,5 +93,65 @@ public class StudentServiceImpl implements StudentService {
         // 批量删除学生
         studentMapper.deleteByIds(ids);
         log.info("学生批量删除成功，IDs：{}", ids);
+    }
+
+    /**
+     * 修改学生信息
+     *
+     * @param studentDTO
+     */
+    @Override
+    public void updateStudent(StudentDTO studentDTO) {
+        // 基本校验
+        if (studentDTO == null) {
+            throw new BusinessException(400, "参数不能为空");
+        }
+        if (studentDTO.getId() == null) {
+            throw new BusinessException(400, "ID不能为空");
+        }
+        log.info("修改学生信息，ID：{}", studentDTO.getId());
+
+        // 校验学生是否存在（用ID查询）
+        Student currentStudent = studentMapper.findById(studentDTO.getId());
+        if (currentStudent == null) {
+            throw new BusinessException(400, "该学生不存在");
+        }
+
+        // 若修改学号，校验新学号是否与其他学生冲突
+        if (studentDTO.getStudentNumber() != null) {
+            Student existStudent = studentMapper.findByStudentNumber(studentDTO.getStudentNumber());
+            if (existStudent != null && !existStudent.getId().equals(studentDTO.getId())) {
+                throw new BusinessException(400, "学号已有其他学生使用");
+            }
+        }
+
+        // 若传入班级ID，校验班级是否存在
+        if (studentDTO.getClassId() != null && classMapper.existsById(studentDTO.getClassId()) == 0) {
+            throw new BusinessException(400, "班级不存在");
+        }
+
+        // 若传入专业ID，校验专业是否存在
+        if (studentDTO.getMajorId() != null && majorMapper.existsById(studentDTO.getMajorId()) == 0) {
+            throw new BusinessException(400, "专业不存在");
+        }
+
+        // 若修改了入学日期或班级ID，校验入学年份与班级年级是否一致
+        // 优先用传入的值，没传则用当前学生的值
+        Long classIdToCheck = studentDTO.getClassId() != null ? studentDTO.getClassId() : currentStudent.getClassId();
+        if (classIdToCheck != null) {
+            // 获取入学日期：优先用传入的，没传则用当前的
+            LocalDate enrollmentDate = studentDTO.getEnrollmentDate() != null
+                    ? studentDTO.getEnrollmentDate() : currentStudent.getEnrollmentDate();
+            if (enrollmentDate != null) {
+                String enrollmentYear = String.valueOf(enrollmentDate.getYear());
+                String classGrade = classMapper.findGradeById(classIdToCheck);
+                if (classGrade != null && !classGrade.equals(enrollmentYear)) {
+                    throw new BusinessException(400, "入学年份(" + enrollmentYear + ")与班级年级(" + classGrade + ")不一致，请选择正确的班级");
+                }
+            }
+        }
+
+        studentMapper.update(studentDTO);
+        log.info("学生信息修改成功，ID：{}", studentDTO.getId());
     }
 }

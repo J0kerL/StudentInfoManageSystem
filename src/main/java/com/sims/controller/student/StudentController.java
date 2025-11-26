@@ -42,4 +42,16 @@ public class StudentController {
         studentService.deleteStudents(ids);
         return Result.success(null);
     }
+
+    /**
+     * 修改学生信息
+     *
+     * @param studentDTO
+     * @return
+     */
+    @PutMapping("/update")
+    public Result<String> updateStudent(@RequestBody StudentDTO studentDTO) {
+        studentService.updateStudent(studentDTO);
+        return Result.success(null);
+    }
 }
