@@ -2,9 +2,9 @@ package com.sims.mapper;
 
 import com.sims.model.dto.student.StudentDTO;
 import com.sims.model.entity.Student;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  * @author Diamond
@@ -19,4 +19,6 @@ public interface StudentMapper {
             "values(#{studentNumber}, #{name}, #{gender}, #{birthDate}, #{phone}, #{email}, #{address}, #{enrollmentDate}, #{majorId}, #{classId}, #{status}, #{createTime}, #{updateTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(StudentDTO studentDTO);
+
+    void deleteByIds(@Param("ids") List<Long> ids);
 }

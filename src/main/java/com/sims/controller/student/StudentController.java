@@ -5,10 +5,9 @@ import com.sims.model.vo.StudentVO;
 import com.sims.result.Result;
 import com.sims.service.StudentService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Diamond
@@ -30,5 +29,17 @@ public class StudentController {
     @PostMapping("/add")
     public Result<StudentVO> addStudent(@RequestBody StudentDTO studentDTO) {
         return Result.success(studentService.addStudent(studentDTO));
+    }
+
+    /**
+     * 批量删除学生
+     *
+     * @param ids 学生ID列表
+     * @return
+     */
+    @DeleteMapping("/delete")
+    public Result<String> deleteStudents(@RequestBody List<Long> ids) {
+        studentService.deleteStudents(ids);
+        return Result.success(null);
     }
 }

@@ -3,6 +3,7 @@ package com.sims.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.sims.constant.Status;
 import com.sims.exception.BusinessException;
+import com.sims.mapper.ScoreMapper;
 import com.sims.mapper.StudentMapper;
 import com.sims.model.dto.student.StudentDTO;
 import com.sims.model.vo.StudentVO;
@@ -10,6 +11,9 @@ import com.sims.service.StudentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Diamond
@@ -21,6 +25,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Resource
     private StudentMapper studentMapper;
+    @Resource
+    private ScoreMapper scoreMapper;
 
     /**
      * 添加学生
@@ -59,5 +65,25 @@ public class StudentServiceImpl implements StudentService {
         StudentVO studentVO = new StudentVO();
         BeanUtil.copyProperties(studentDTO, studentVO);
         return studentVO;
+    }
+
+    /**
+     * 批量删除学生
+     *
+     * @param ids 学生ID列表
+     */
+    @Override
+    @Transactional
+    public void deleteStudents(List<Long> ids) {
+        log.info("批量删除学生，IDs：{}", ids);
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(400, "ID列表不能为空");
+        }
+        // 根据学生id批量删除对应成绩
+        scoreMapper.deleteByStudentIds(ids);
+        log.info("批量删除学生对应的成绩，IDs：{}", ids);
+        // 批量删除学生
+        studentMapper.deleteByIds(ids);
+        log.info("学生批量删除成功，IDs：{}", ids);
     }
 }
