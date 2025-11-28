@@ -11,7 +11,7 @@
  Target Server Version : 80041 (8.0.41)
  File Encoding         : 65001
 
- Date: 28/11/2025 10:36:09
+ Date: 28/11/2025 11:04:39
 */
 
 SET NAMES utf8mb4;
@@ -42,7 +42,6 @@ INSERT INTO `class` VALUES (1, '计算机科学与技术2025级1班', 1, '2025',
 INSERT INTO `class` VALUES (2, '计算机科学与技术2025级2班', 1, '2025', '李老师', '2025-11-12 12:03:37', '2025-11-26 11:49:46');
 INSERT INTO `class` VALUES (3, '软件工程2025级1班', 2, '2025', '王老师', '2025-11-12 12:03:37', '2025-11-26 11:49:48');
 INSERT INTO `class` VALUES (4, '电子信息工程2025级1班', 3, '2025', '赵老师', '2025-11-12 12:03:37', '2025-11-26 11:49:51');
-INSERT INTO `class` VALUES (5, '测试2026级1班', 1, '2026', '测试老师', '2025-11-26 11:35:06', '2025-11-26 11:50:23');
 
 -- ----------------------------
 -- Table structure for course
@@ -98,7 +97,6 @@ INSERT INTO `major` VALUES (1, '计算机科学与技术', 'CS001', '学习计�
 INSERT INTO `major` VALUES (2, '软件工程', 'SE001', '研究软件开发和维护的专业', '计算机学院', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
 INSERT INTO `major` VALUES (3, '电子信息工程', 'EE001', '研究电子技术和信息系统工程的专业', '电子工程学院', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
 INSERT INTO `major` VALUES (4, '机械设计制造及其自动化', 'ME001', '研究机械设计制造及自动化控制的专业', '机械工程学院', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
-INSERT INTO `major` VALUES (5, '测试专业', 'CSZY001', '测试专业', '测试学院', '2025-11-28 09:43:37', '2025-11-28 09:43:37');
 
 -- ----------------------------
 -- Table structure for score
@@ -161,7 +159,6 @@ CREATE TABLE `student`  (
 INSERT INTO `student` VALUES (1, '2025001001', '昭阳', 'MALE', '13800000001', 'zhaoyang@luku.com', '江苏省徐州市', '2025-09-01', 1, 1, 'ACTIVE', '2025-11-25 13:57:14', '2025-11-26 11:07:02');
 INSERT INTO `student` VALUES (2, '2025001002', '米彩', 'FEMALE', '13800000002', 'micai@zhuomei.com', '江苏省苏州市', '2025-09-01', 1, 1, 'ACTIVE', '2025-11-25 14:06:53', '2025-11-26 11:07:03');
 INSERT INTO `student` VALUES (3, '2025001003', '乐瑶', 'FEMALE', '13800000003', 'leyao@actress.com', '北京市东城区', '2025-09-01', 1, 1, 'ACTIVE', '2025-11-25 14:11:55', '2025-11-26 11:07:05');
-INSERT INTO `student` VALUES (4, '2025001005', '测试123', 'FEMALE', '13800000008', 'test@test.com', '测试省测试市', '2026-09-01', 2, 5, 'ACTIVE', '2025-11-26 11:35:20', '2025-11-26 11:57:41');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -188,7 +185,6 @@ CREATE TABLE `sys_user`  (
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES (1, 'admin', '$2a$12$N7RJajdRNh5sLl99tuB18euJhpiLmkDsUEdmcTBuYcovSWpSdfsu.', '管理员', '13800000000', 'admin@system.edu', 'ADMIN', 'ACTIVE', '2025-11-25 10:46:21', '2025-11-25 10:46:27');
-INSERT INTO `sys_user` VALUES (2, 'teacher01', '$2a$12$N7RJajdRNh5sLl99tuB18euJhpiLmkDsUEdmcTBuYcovSWpSdfsu.', '陈教授', '13900000001', 'chen@university.edu', 'TEACHER', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-18 17:36:12');
 
 -- ----------------------------
 -- Table structure for teacher
@@ -199,7 +195,6 @@ CREATE TABLE `teacher`  (
   `employee_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '工号',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '姓名',
   `gender` enum('MALE','FEMALE') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '性别',
-  `birth_date` date NOT NULL COMMENT '出生日期',
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '联系电话',
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电子邮箱',
   `department` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属部门',
@@ -218,9 +213,9 @@ CREATE TABLE `teacher`  (
 -- ----------------------------
 -- Records of teacher
 -- ----------------------------
-INSERT INTO `teacher` VALUES (1, 'T001', '陈教授', 'MALE', '1975-03-15', '13900000001', 'chen@university.edu', '计算机学院', '教授', '2005-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
-INSERT INTO `teacher` VALUES (2, 'T002', '刘教授', 'FEMALE', '1980-07-22', '13900000002', 'liu@university.edu', '计算机学院', '教授', '2008-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
-INSERT INTO `teacher` VALUES (3, 'T003', '杨教授', 'MALE', '1978-11-30', '13900000003', 'yang@university.edu', '计算机学院', '副教授', '2010-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
-INSERT INTO `teacher` VALUES (4, 'T004', '孙教授', 'FEMALE', '1972-01-18', '13900000004', 'sun@university.edu', '数学学院', '教授', '2003-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
+INSERT INTO `teacher` VALUES (1, 'T001', '陈教授', 'MALE', '13900000001', 'chen@university.edu', '计算机学院', '教授', '2005-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
+INSERT INTO `teacher` VALUES (2, 'T002', '刘教授', 'FEMALE', '13900000002', 'liu@university.edu', '计算机学院', '教授', '2008-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
+INSERT INTO `teacher` VALUES (3, 'T003', '杨教授', 'MALE', '13900000003', 'yang@university.edu', '计算机学院', '副教授', '2010-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
+INSERT INTO `teacher` VALUES (4, 'T004', '孙教授', 'FEMALE', '13900000004', 'sun@university.edu', '数学学院', '教授', '2003-09-01', 'ACTIVE', '2025-11-12 12:03:37', '2025-11-12 12:03:37');
 
 SET FOREIGN_KEY_CHECKS = 1;
