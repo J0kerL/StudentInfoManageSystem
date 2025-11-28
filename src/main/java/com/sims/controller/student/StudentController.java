@@ -68,4 +68,15 @@ public class StudentController {
         PageResult pageResult = studentService.page(pageQueryStudentDTO);
         return Result.success(pageResult);
     }
+    
+    /**
+     * 根据ID查询学生
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<StudentVO> getStudentById(@PathVariable Long id) {
+        return Result.success(studentService.getStudentById(id));
+    }
 }

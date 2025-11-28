@@ -20,4 +20,6 @@ public interface StudentService {
     void updateStudent(StudentDTO studentDTO);
 
     PageResult page(PageQueryStudentDTO pageQueryStudentDTO);
+
+    StudentVO getStudentById(Long id);
 }

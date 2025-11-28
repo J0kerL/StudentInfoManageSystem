@@ -25,6 +25,12 @@ public interface StudentMapper {
     @Select("select * from student where id = #{id}")
     Student findById(Long id);
 
+    /**
+     * 根据专业ID统计学生数量
+     */
+    @Select("select count(*) from student where major_id = #{majorId}")
+    int countByMajorId(Long majorId);
+
     void deleteByIds(@Param("ids") List<Long> ids);
 
     void update(StudentDTO studentDTO);

@@ -28,4 +28,6 @@ public interface UserService {
     void deleteUser(List<Long> ids);
 
     void updateUser(UpdateUserDTO updateUserDTO);
+
+    UserVO getUserById(Long id);
 }

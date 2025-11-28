@@ -171,4 +171,24 @@ public class StudentServiceImpl implements StudentService {
         Page<Student> pageResult = studentMapper.page(pageQueryStudentDTO);
         return new PageResult(pageResult.getTotal(), pageResult.getResult());
     }
+    
+    /**
+     * 根据ID查询学生
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public StudentVO getStudentById(Long id) {
+        if (id == null) {
+            throw new BusinessException(400, "ID不能为空");
+        }
+        Student student = studentMapper.findById(id);
+        if (student == null) {
+            throw new BusinessException(400, "学生不存在");
+        }
+        StudentVO studentVO = new StudentVO();
+        BeanUtil.copyProperties(student, studentVO);
+        return studentVO;
+    }
 }

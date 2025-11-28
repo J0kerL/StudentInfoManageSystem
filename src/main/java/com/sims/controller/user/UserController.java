@@ -131,4 +131,15 @@ public class UserController {
         userService.updateUser(updateUserDTO);
         return Result.success(null);
     }
+    
+    /**
+     * 根据ID查询用户
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<UserVO> getUserById(@PathVariable Long id) {
+        return Result.success(userService.getUserById(id));
+    }
 }

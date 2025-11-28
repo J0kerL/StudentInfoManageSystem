@@ -118,13 +118,12 @@ public class UserServiceImpl implements UserService {
         userDTO.setRealName(realName);
         userDTO.setPhone(phone);
         userDTO.setEmail(email);
-        // 默认注册为教师
+
+        // 默认普通用户类型
         userDTO.setUserType(UserType.TEACHER);
         // 默认激活状态
         userDTO.setStatus(Status.ACTIVE);
-        // createTime和updateTime由MyBatis拦截器自动填充
 
-        // 插入数据库
         userMapper.insert(userDTO);
 
         // 将UserDTO直接转换为UserVO
@@ -137,23 +136,19 @@ public class UserServiceImpl implements UserService {
     /**
      * 退出登录
      *
-     * @param token JWT token
+     * @param token
      */
     @Override
     public void logout(String token) {
+        log.info("用户退出登录，token：{}", token);
         if (StringUtils.isBlank(token)) {
-            throw new BusinessException(400, "Token不能为空");
+            throw new BusinessException(400, "token不能为空");
         }
 
-        // 验证token是否有效
-        if (!jwtUtil.validateToken(token)) {
-            throw new BusinessException(401, "Token无效或已过期");
-        }
-
-        // 获取token的剩余有效期
+        // 计算token剩余有效期
         Long remainingTime = jwtUtil.getTokenRemainingTime(token);
         if (remainingTime <= 0) {
-            throw new BusinessException(401, "Token已过期");
+            throw new BusinessException(400, "token已过期");
         }
 
         // 将token加入黑名单，过期时间与token的剩余有效期一致
@@ -297,5 +292,26 @@ public class UserServiceImpl implements UserService {
         }
         // updateTime由MyBatis拦截器自动填充
         userMapper.update(updateUserDTO);
+    }
+    
+    /**
+     * 根据ID查询用户
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public UserVO getUserById(Long id) {
+        if (id == null) {
+            throw new BusinessException(400, "ID不能为空");
+        }
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new BusinessException(400, "用户不存在");
+        }
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(user, userVO);
+        userVO.setPassword("******");
+        return userVO;
     }
 }
