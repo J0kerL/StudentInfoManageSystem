@@ -22,10 +22,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
                 // 拦截所有请求
                 .addPathPatterns("/**")
-                // 排除登录、注册等不需要验证的接口
+                // 排除登录、注册、重置密码等不需要验证的接口
                 .excludePathPatterns(
                         "/user/login",
                         "/user/register",
+                        "/user/resetPassword",
                         "/error",
                         "/favicon.ico"
                 );

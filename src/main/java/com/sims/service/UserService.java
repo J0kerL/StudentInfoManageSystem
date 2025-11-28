@@ -30,4 +30,18 @@ public interface UserService {
     void updateUser(UpdateUserDTO updateUserDTO);
 
     UserVO getUserById(Long id);
+
+    /**
+     * 修改密码（已登录用户）
+     *
+     * @param changePasswordDTO
+     */
+    void changePassword(ChangePasswordDTO changePasswordDTO);
+
+    /**
+     * 重置密码（忘记密码场景）
+     *
+     * @param resetPasswordDTO
+     */
+    void resetPassword(ResetPasswordDTO resetPasswordDTO);
 }

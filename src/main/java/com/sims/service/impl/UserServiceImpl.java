@@ -304,14 +304,120 @@ public class UserServiceImpl implements UserService {
     public UserVO getUserById(Long id) {
         if (id == null) {
             throw new BusinessException(400, "ID不能为空");
-        }
-        User user = userMapper.findById(id);
-        if (user == null) {
-            throw new BusinessException(400, "用户不存在");
-        }
-        UserVO userVO = new UserVO();
-        BeanUtil.copyProperties(user, userVO);
-        userVO.setPassword("******");
-        return userVO;
     }
+    User user = userMapper.findById(id);
+    if (user == null) {
+        throw new BusinessException(400, "用户不存在");
+    }
+    UserVO userVO = new UserVO();
+    BeanUtil.copyProperties(user, userVO);
+    userVO.setPassword("******");
+    return userVO;
+}
+
+/**
+ * 修改密码（已登录用户）
+ *
+ * @param changePasswordDTO
+ */
+@Override
+public void changePassword(ChangePasswordDTO changePasswordDTO) {
+    Long currentUserId = UserContext.getUserId();
+    log.info("用户：{}正在修改密码...", currentUserId);
+
+    // 参数校验
+    String oldPassword = changePasswordDTO.getOldPassword();
+    String newPassword = changePasswordDTO.getNewPassword();
+    String confirmPassword = changePasswordDTO.getConfirmPassword();
+
+    if (StringUtils.isBlank(oldPassword)) {
+        throw new BusinessException(400, "旧密码不能为空");
+    }
+    if (StringUtils.isBlank(newPassword)) {
+        throw new BusinessException(400, "新密码不能为空");
+    }
+    if (StringUtils.isBlank(confirmPassword)) {
+        throw new BusinessException(400, "确认密码不能为空");
+    }
+    if (!newPassword.equals(confirmPassword)) {
+        throw new BusinessException(400, "两次输入的新密码不一致");
+    }
+    if (oldPassword.equals(newPassword)) {
+        throw new BusinessException(400, "新密码不能与旧密码相同");
+    }
+
+    // 查询当前用户
+    User user = userMapper.findById(currentUserId);
+    if (user == null) {
+        throw new BusinessException(401, "用户不存在");
+    }
+
+    // 验证旧密码
+    if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
+        throw new BusinessException(400, "旧密码错误");
+    }
+
+    // 加密新密码并更新
+    String encryptedPassword = BCrypt.hashpw(newPassword);
+    userMapper.updatePassword(currentUserId, encryptedPassword);
+
+    log.info("用户：{}密码修改成功", currentUserId);
+}
+
+/**
+ * 重置密码（忘记密码场景）
+ *
+ * @param resetPasswordDTO
+ */
+@Override
+public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
+    log.info("用户正在重置密码，用户名：{}", resetPasswordDTO.getUsername());
+
+    // 参数校验
+    String username = resetPasswordDTO.getUsername();
+    String email = resetPasswordDTO.getEmail();
+    String phone = resetPasswordDTO.getPhone();
+    String newPassword = resetPasswordDTO.getNewPassword();
+    String confirmPassword = resetPasswordDTO.getConfirmPassword();
+
+    if (StringUtils.isBlank(username)) {
+        throw new BusinessException(400, "用户名不能为空");
+    }
+    if (StringUtils.isBlank(newPassword)) {
+        throw new BusinessException(400, "新密码不能为空");
+    }
+    if (StringUtils.isBlank(confirmPassword)) {
+        throw new BusinessException(400, "确认密码不能为空");
+    }
+    if (!newPassword.equals(confirmPassword)) {
+        throw new BusinessException(400, "两次输入的新密码不一致");
+    }
+    if (StringUtils.isBlank(email) && StringUtils.isBlank(phone)) {
+        throw new BusinessException(400, "邮箱或手机号至少填写一项用于身份验证");
+    }
+
+    // 身份验证：通过用户名+邮箱或用户名+手机号验证
+    User user = null;
+    if (StringUtils.isNotBlank(email)) {
+        user = userMapper.findByUsernameAndEmail(username, email);
+    }
+    if (user == null && StringUtils.isNotBlank(phone)) {
+        user = userMapper.findByUsernameAndPhone(username, phone);
+    }
+
+    if (user == null) {
+        throw new BusinessException(400, "用户信息验证失败，请检查用户名和邮箱/手机号是否匹配");
+    }
+
+    // 检查账号状态
+    if (user.getStatus() == Status.INACTIVE) {
+        throw new BusinessException(403, "账号已锁定，请联系管理员");
+    }
+
+    // 加密新密码并更新
+    String encryptedPassword = BCrypt.hashpw(newPassword);
+    userMapper.updatePassword(user.getId(), encryptedPassword);
+
+    log.info("用户：{}密码重置成功", username);
+}
 }

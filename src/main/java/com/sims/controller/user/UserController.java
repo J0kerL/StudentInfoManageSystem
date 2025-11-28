@@ -142,4 +142,28 @@ public class UserController {
     public Result<UserVO> getUserById(@PathVariable Long id) {
         return Result.success(userService.getUserById(id));
     }
+
+    /**
+     * 修改密码（已登录用户）
+     *
+     * @param changePasswordDTO 修改密码请求参数
+     * @return
+     */
+    @PutMapping("/changePassword")
+    public Result<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        userService.changePassword(changePasswordDTO);
+        return Result.success("密码修改成功", null);
+    }
+
+    /**
+     * 重置密码（忘记密码场景，无需登录）
+     *
+     * @param resetPasswordDTO 重置密码请求参数
+     * @return
+     */
+    @PostMapping("/resetPassword")
+    public Result<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        userService.resetPassword(resetPasswordDTO);
+        return Result.success("密码重置成功", null);
+    }
 }

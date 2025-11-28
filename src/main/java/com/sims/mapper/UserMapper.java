@@ -32,4 +32,13 @@ public interface UserMapper {
     void deleteByIds(@Param("ids") List<Long> ids);
 
     void update(UpdateUserDTO updateUserDTO);
+
+    @Update("UPDATE sys_user SET password = #{password} WHERE id = #{id}")
+    void updatePassword(@Param("id") Long id, @Param("password") String password);
+
+    @Select("SELECT * FROM sys_user WHERE username = #{username} AND email = #{email}")
+    User findByUsernameAndEmail(@Param("username") String username, @Param("email") String email);
+
+    @Select("SELECT * FROM sys_user WHERE username = #{username} AND phone = #{phone}")
+    User findByUsernameAndPhone(@Param("username") String username, @Param("phone") String phone);
 }
