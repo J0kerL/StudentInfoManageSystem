@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sims.mapper.ClassMapper">
+
+    <!-- 修改班级信息 -->
+    <update id="update">
+        UPDATE class
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="majorId != null">
+                major_id = #{majorId},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+            <if test="advisor != null and advisor != ''">
+                advisor = #{advisor},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除班级 -->
+    <delete id="deleteByIds">
+        DELETE FROM class WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 分页查询班级信息 -->
+    <select id="page" resultType="com.sims.model.entity.Clazz">
+        SELECT * FROM class
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="majorId != null">
+                AND major_id = #{majorId}
+            </if>
+            <if test="grade != null and grade != ''">
+                AND grade = #{grade}
+            </if>
+            <if test="advisor != null and advisor != ''">
+                AND advisor LIKE CONCAT('%', #{advisor}, '%')
+            </if>
+        </where>
+        ORDER BY id ASC
+    </select>
+</mapper>

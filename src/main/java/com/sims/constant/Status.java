@@ -9,4 +9,5 @@ public enum Status {
     INACTIVE,
     GRADUATED,
     TRANSFERRED,
+    RETIRED,
 }

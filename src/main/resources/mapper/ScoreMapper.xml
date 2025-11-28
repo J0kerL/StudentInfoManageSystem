@@ -11,4 +11,61 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 批量删除成绩 -->
+    <delete id="deleteByIds">
+        DELETE FROM score WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改成绩信息 -->
+    <update id="update">
+        UPDATE score
+        <set>
+            <if test="studentId != null">
+                student_id = #{studentId},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+            <if test="semester != null and semester != ''">
+                semester = #{semester},
+            </if>
+            <if test="examDate != null">
+                exam_date = #{examDate},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 分页查询成绩信息 -->
+    <select id="page" resultType="com.sims.model.entity.Score">
+        SELECT * FROM score
+        <where>
+            <if test="studentId != null">
+                AND student_id = #{studentId}
+            </if>
+            <if test="courseId != null">
+                AND course_id = #{courseId}
+            </if>
+            <if test="semester != null and semester != ''">
+                AND semester = #{semester}
+            </if>
+            <if test="grade != null and grade != ''">
+                AND grade = #{grade}
+            </if>
+        </where>
+        ORDER BY id ASC
+    </select>
 </mapper>

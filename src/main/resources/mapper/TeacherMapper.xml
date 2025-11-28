@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sims.mapper.TeacherMapper">
+
+    <!-- 修改教师信息 -->
+    <update id="update">
+        UPDATE teacher
+        <set>
+            <if test="employeeNumber != null and employeeNumber != ''">
+                employee_number = #{employeeNumber},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="department != null and department != ''">
+                department = #{department},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="hireDate != null">
+                hire_date = #{hireDate},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除教师 -->
+    <delete id="deleteByIds">
+        DELETE FROM teacher WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 分页查询教师信息 -->
+    <select id="page" resultType="com.sims.model.entity.Teacher">
+        SELECT * FROM teacher
+        <where>
+            <if test="employeeNumber != null and employeeNumber != ''">
+                AND employee_number LIKE CONCAT('%', #{employeeNumber}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="department != null and department != ''">
+                AND department LIKE CONCAT('%', #{department}, '%')
+            </if>
+            <if test="title != null and title != ''">
+                AND title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY id ASC
+    </select>
+</mapper>
